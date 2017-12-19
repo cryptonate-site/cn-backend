@@ -1,0 +1,13 @@
+{
+  "db": {
+    "connectionLimit" : 10,
+    "host"     : "",
+    "user"     : "",
+    "password" : "",
+    "database" : ""
+  },
+  "coinbase": {
+    "apiKey": "",
+    "apiSecret": ""
+  }
+}
