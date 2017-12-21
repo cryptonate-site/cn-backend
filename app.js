@@ -12,9 +12,12 @@ global.database = new Database(global.config.db);
 var index = require('./routes/index');
 var users = require('./routes/users');
 
+var Coinpayments = require('coinpayments');
 var app = express();
 
-global.database.testStuff();
+var CPEvents = require('./lib/coinpayments-events');
+
+var events = new CPEvents();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -40,7 +43,10 @@ app.use(function(req, res, next) {
   err.status = 404;
   next(err);
 });
-
+app.use(Coinpayments.ipn({
+    merchantId: global.config.coinpayments.merchId,
+    merchantSecret: global.config.coinpayments.merchSecret
+}));
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
@@ -49,7 +55,11 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  if(req.url.includes("/api")) {
+      res.json({"error": "Internal Server Error", "message": err.message});
+  } else {
+      res.render('error');
+  }
 });
 
 module.exports = app;

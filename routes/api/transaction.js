@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
 const uuidv1 = require('uuid/v1');
-const Client = require('coinbase').Client;
-const client = new Client(global.config.coinbase);
+const Coinpayments = require('coinpayments');
+const client = new Coinpayments(global.config.coinpayments);
 const Validator = require("validate-params");
 const crypto = require('crypto');
 /*
@@ -58,7 +58,7 @@ var temp = function fun() {
 router.post('/start-flow/:foruser', function(req, res, next) {
     // req.params.foruser
     try {
-        Validator.assert.arg(req.params.foruser, 'string');
+        console.log(req.body.amount);
         Validator.assert.args(req.body, {
             amount: "number",
             currency: "string",
@@ -73,34 +73,41 @@ router.post('/start-flow/:foruser', function(req, res, next) {
     }
     var orderOut = {
         amount: req.body.amount,
-        currency: req.body.currency,
-        name: "Donation for " + req.params.foruser,
-        description: "A donation for " + req.params.foruser,
-        metadata: {
-            for_user: req.params.foruser,
-            from_user: req.body.from_user,
-            from_email: req.body.from_email,
-            message: req.body.message
-        }
-    }
-    client.createOrder(orderOut, function (err, orderIn) {
+        currency1: req.body.currency,
+        currency2: req.body.currency,
+        buyer_name: req.body.from_user,
+        buyer_email: req.body.from_email,
+        custom: req.body.message,
+        item_name: req.params.foruser
+    };
+    client.createTransaction(orderOut, function (err, orderIn) {
         if(err) {
             res.status(500);
-            res.json({"error": "error received from coinbase", data: err.message});
+            res.json({"error": "Error received from Coinpayments", data: err});
             console.error(err);
-            return null;
+            return;
         }
+        global.database.pool.query("INSERT INTO `transactions` SET ?", {
+            order_id: orderIn.txn_id,
+            amount: orderIn.amount,
+            currency: req.body.currency2,
+            to_email: req.params.foruser,
+            order_status: 0
+        }, function (err) {
+            if(err) console.error(err);
+        });
         var responseData = {
-            orderId: orderIn.data.id,
-            send_to: orderIn.data.bitcoin_address,
-            btc_uri: orderIn.data.bitcoin_url,
-            recpt_url: orderIn.data.receipt_url
+            orderId: orderIn.txn_id,
+            send_to: orderIn.address,
+            recpt_url: orderIn.status_url,
+            timeout: orderIn.timeout
         };
         res.json(responseData);
     });
 });
 
 router.get("/is-complete/:transactionid", function (req, res, next) {
+    //TODO: Update to new DB schema
     global.database.pool.query("SELECT id FROM `completed_orders` WHERE order_id=?", [req.params.transactionid], function (error, results, fields) {
         if(error) {
             res.status(500);
@@ -110,21 +117,4 @@ router.get("/is-complete/:transactionid", function (req, res, next) {
         res.json({completed: results.length > 0});
     });
 });
-
-router.post("/coinbase-in", function (req, res, next) {
-    if(client.verifyCallback(req.body_raw, req.get("CB-SIGNATURE"))) {
-        if(req.body.type == "wallet:orders:paid") {
-            var orderData = req.body.data.resource;
-            global.database.pool.query("INSERT INTO `completed_orders` SET ?", {
-                order_id: orderData.id
-            });
-            res.end();
-        }
-    } else {
-        res.status(500);
-        res.json({"error": "failed to verify coinbase response"});
-        return;
-    }
-});
-
 module.exports = router;

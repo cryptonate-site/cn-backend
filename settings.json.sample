@@ -6,8 +6,10 @@
     "password" : "",
     "database" : ""
   },
-  "coinbase": {
-    "apiKey": "",
-    "apiSecret": ""
+  "coinpayments": {
+    "key": "",
+    "secret": "",
+    "merchId": "",
+    "merchSecret": ""
   }
 }
