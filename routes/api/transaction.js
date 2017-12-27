@@ -58,7 +58,6 @@ var temp = function fun() {
 router.post('/start-flow/:foruser', function(req, res, next) {
     // req.params.foruser
     try {
-        console.log(req.body.amount);
         Validator.assert.args(req.body, {
             amount: "number",
             currency: "string",
@@ -80,7 +79,12 @@ router.post('/start-flow/:foruser', function(req, res, next) {
         custom: req.body.message,
         item_name: req.params.foruser
     };
+    if(global.config.coinpayments.useTempIPN !== undefined) {
+        orderOut.ipn = global.config.coinpayments.useTempIPN;
+    }
+    console.log("Sending in transaction.");
     client.createTransaction(orderOut, function (err, orderIn) {
+        console.log("Transaction CB fired");
         if(err) {
             res.status(500);
             res.json({"error": "Error received from Coinpayments", data: err});
@@ -90,10 +94,11 @@ router.post('/start-flow/:foruser', function(req, res, next) {
         global.database.pool.query("INSERT INTO `transactions` SET ?", {
             order_id: orderIn.txn_id,
             amount: orderIn.amount,
-            currency: req.body.currency2,
+            currency: req.body.currency,
             to_email: req.params.foruser,
             order_status: 0
         }, function (err) {
+            console.log("inserted stuff");
             if(err) console.error(err);
         });
         var responseData = {
@@ -102,6 +107,7 @@ router.post('/start-flow/:foruser', function(req, res, next) {
             recpt_url: orderIn.status_url,
             timeout: orderIn.timeout
         };
+        console.log("meme");
         res.json(responseData);
     });
 });
