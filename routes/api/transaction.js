@@ -80,7 +80,7 @@ router.post('/start-flow/:foruser', function(req, res, next) {
         item_name: req.params.foruser
     };
     if(global.config.coinpayments.useTempIPN !== undefined) {
-        orderOut.ipn = global.config.coinpayments.useTempIPN;
+        orderOut.ipn_url = global.config.coinpayments.useTempIPN;
     }
     console.log("Sending in transaction.");
     client.createTransaction(orderOut, function (err, orderIn) {
