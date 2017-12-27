@@ -114,10 +114,11 @@ router.post('/start-flow/:foruser', function(req, res, next) {
 
 router.get("/is-complete/:transactionid", function (req, res, next) {
     //TODO: Update to new DB schema
-    global.database.pool.query("SELECT id FROM `completed_orders` WHERE order_id=?", [req.params.transactionid], function (error, results, fields) {
+    global.database.pool.query("SELECT id FROM `transactions` WHERE order_id=? AND order_status=2", [req.params.transactionid], function (error, results, fields) {
         if(error) {
             res.status(500);
             res.json({error: "Database error"});
+	    console.error(error);
             return;
         }
         res.json({completed: results.length > 0});
