@@ -91,12 +91,17 @@
                     <code id="confirmation-date"></code> or your transaction may not be accepted by the system.
                 </p>
                 <p>
-                    If this occurs please email our support team, so that we can provide a partial refund for the faulty
-                    transaction. Please note that we assume no responsibility for failed transactions, and are under no
-                    obligation to provide a refund at any time.
+                    If this occurs, your funds will automatically be returned to you (minus the miners fees for both transactions)
+                    after the transaction is fully confirmed by the Blockchain.
                 </p>
             </div>
             <div class="modal-footer">
+                <p class="text-center">Waiting for Transaction to Confirm</p>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                        <span class="sr-only">Waiting for Transaction to Confirm</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -112,6 +117,10 @@
 <script src="js/easypiechart-data.js"></script>
 <script src="js/bootstrap-datepicker.js"></script>
 <script src="js/custom.js"></script>
+
+<script>
+    var forUser = 11;
+</script>
 <script>
     $("#submit-btn").on('click',function () {
         var meme = $("#donate-form").serializeArray();
@@ -125,7 +134,7 @@
         btn.text("Submitting...");
         $.ajax({
             type: "POST",
-            url: "/api/transaction/start-flow/" + "forName", //TODO: Implement forUserName
+            url: "/api/transaction/start-flow/" + forUser, //TODO: Implement forUserName
             data: JSON.stringify(dataOut),
             dataType: "json",
             success: function (resp) {
