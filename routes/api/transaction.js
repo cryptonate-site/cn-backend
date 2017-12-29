@@ -5,42 +5,6 @@ const uuidv1 = require('uuid/v1');
 const Coinpayments = require('coinpayments');
 const client = new Coinpayments(global.config.coinpayments);
 const Validator = require("validate-params");
-const crypto = require('crypto');
-/*
-var temp = function fun() {
-    global.database.pool.getConnection(function (err, connection) {
-        if(err) {
-            res.status(500);
-            res.json({error: "Failed to connect to database", data: err});
-            return;
-        }
-
-        //(`uuid`, `to_email`, `amount`, `currency`, `from_email`, `from_name`, `message`)
-        var uuid = uuidv1();
-        var toInsert = {
-            uuid: uuid,
-            to_email: "test@test.com",
-            amount: 0.0001,
-            currency: "TCC",
-            from_email: "test@customer.com",
-            from_name: "memerman",
-            message: "this is a test email"
-        };
-
-        connection.query("INSERT INTO `transactions` SET ?", toInsert, function (error, results, fields) {
-            if(error) {
-                res.status(500);
-                res.json({error: "Database threw error"});
-                return;
-            }
-            res.json({
-                uuid: uuid
-            });
-        });
-        connection.release();
-    });
-}
-*/
 
 /**
  * Transaction Flow Documentation:
