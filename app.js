@@ -32,8 +32,8 @@ app.use(function (req, res, next) {
         req.on("data", function (chunk) {
             req.rawBody += chunk;
         });
-        next();
     }
+    next();
 });
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
