@@ -27,13 +27,15 @@ app.set('view engine', 'jade');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(function (req, res, next) {
-    req.on("");
-});
-app.use(bodyParser.json({
-    verify: function (req, res, buf, encode) {
-        req.rawBody = buf.toString();
+    if(req.url.toLowerCase() === '/ipn') {
+        req.rawBody = '';
+        req.on("data", function (chunk) {
+            req.rawBody += chunk;
+        });
+        next();
     }
-}));
+});
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -42,34 +44,34 @@ app.use('/', index);
 app.use('/api', users);
 
 app.use("/ipn",
-    [Coinpayments.ipn({
-        merchantId: global.config.coinpayments.merchId,
-        merchantSecret: global.config.coinpayments.merchSecret
-    }), function (req, res, next) {
-        res.status(200);
+    [ Coinpayments.ipn({
+            merchantId: global.config.coinpayments.merchId,
+            merchantSecret: global.config.coinpayments.merchSecret
+        }), function (req, res, next) {
+        res.status(500);
         res.end();
     }]);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-  if(req.app.get('env') === 'development') {
-      console.error(err);
-  }
-  // render the error page
-  res.status(err.status || 500);
-  if(req.url.includes("/api")) {
-      res.json({"error": "Internal Server Error", "message": err.message});
-  } else {
-      res.render('error');
-  }
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
+    if(req.app.get('env') === 'development') {
+        console.error(err);
+    }
+    // render the error page
+    res.status(err.status || 500);
+    if(req.url.includes("/api")) {
+        res.json({"error": "Internal Server Error", "message": err.message});
+    } else {
+        res.render('error');
+    }
 });
 
 module.exports = app;
