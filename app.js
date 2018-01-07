@@ -45,9 +45,10 @@ app.use('/api', users);
 
 app.use("/ipn",
     [ Coinpayments.ipn({
-            merchantId: global.config.coinpayments.merchId,
-            merchantSecret: global.config.coinpayments.merchSecret
-        }), function (req, res, next) {
+        merchantId: global.config.coinpayments.merchId,
+        merchantSecret: global.config.coinpayments.merchSecret,
+        rawBodyIndex: "rawBody"
+    }), function (req, res, next) {
         res.status(500);
         res.end();
     }]);
