@@ -1,7 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const mysql = require('mysql');
-const uuidv1 = require('uuid/v1');
 const Coinpayments = require('coinpayments');
 const client = new Coinpayments(global.config.coinpayments);
 const Validator = require("validate-params");
@@ -60,6 +58,7 @@ router.post('/start-flow/:foruser', function(req, res, next) {
             amount: orderIn.amount,
             currency: req.body.currency,
             to_email: req.params.foruser,
+            from_user: req.body.from_user,
             order_status: 0
         }, function (err) {
             console.log("inserted stuff");
