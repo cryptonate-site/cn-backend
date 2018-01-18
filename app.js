@@ -15,8 +15,6 @@ var users = require('./routes/users');
 var Coinpayments = require('coinpayments');
 var app = express();
 
-new require("./lib/socket-manager")(app);
-
 var CPEvents = require('./lib/coinpayments-events');
 
 var events = new CPEvents();
