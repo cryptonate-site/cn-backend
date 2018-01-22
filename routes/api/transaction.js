@@ -44,9 +44,9 @@ router.post('/start-flow/:foruser', function(req, res, next) {
     if(global.config.coinpayments.useTempIPN !== undefined) {
         orderOut.ipn_url = global.config.coinpayments.useTempIPN;
     }
-    console.log("Sending in transaction.");
+    //console.log("Sending in transaction.");
     client.createTransaction(orderOut, function (err, orderIn) {
-        console.log("Transaction CB fired");
+        //console.log("Transaction CB fired");
         if(err) {
             res.status(500);
             res.json({"error": "Error received from Coinpayments", data: err});
@@ -70,18 +70,17 @@ router.post('/start-flow/:foruser', function(req, res, next) {
             recpt_url: orderIn.status_url,
             timeout: orderIn.timeout
         };
-        console.log("meme");
         res.json(responseData);
     });
 });
 
 router.get("/is-complete/:transactionid", function (req, res, next) {
     //TODO: Update to new DB schema
-    global.database.pool.query("SELECT id FROM `transactions` WHERE order_id=? AND order_status=2", [req.params.transactionid], function (error, results, fields) {
+    global.database.pool.query("SELECT id FROM `transactions` WHERE order_id=? AND order_status IN (1,2)", [req.params.transactionid], function (error, results, fields) {
         if(error) {
             res.status(500);
             res.json({error: "Database error"});
-	    console.error(error);
+	        console.error(error);
             return;
         }
         res.json({completed: results.length > 0});
