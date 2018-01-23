@@ -1,9 +1,11 @@
-extends layout
-
-block content
-  h1#whodonated
-  h2#howmuch
-  script(src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js")
-  script.
-    var listenTo = "#{alertboxKey}";
-  script(src="/js/alertbox-control.js")
+doctype html
+html
+  head
+    title= Cryptonate
+  body
+    h1#whodonated
+    h2#howmuch
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js")
+    script.
+      var listenTo = "#{alertboxKey}";
+    script(src="/js/alertbox-control.js")
