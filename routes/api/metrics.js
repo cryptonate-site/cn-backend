@@ -28,16 +28,16 @@ const calculate_value = (res, currencies) => {
 
 router.post("/calculate_value", function (req, res) {
     let key = "__metrics__valuecache";
-    if(res.currencies) {
+    if(res.body.currencies) {
         let cachedBody = mcache.get(key);
         if (!cachedBody) {
             client.rates({short: 1, accepted: 1}, function (err, res) {
                 mcache.put(key, res, 300 * 1000);
-                let total = calculate_value(cachedBody, req.currencies);
+                let total = calculate_value(cachedBody, req.body.currencies);
                 res.json({"amt": total});
             });
         } else {
-            let total = calculate_value(cachedBody, req.currencies);
+            let total = calculate_value(cachedBody, req.body.currencies);
             res.json({"amt": total});
         }
     } else {
