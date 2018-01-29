@@ -32,6 +32,11 @@ router.post("/calculate_value", function (req, res) {
         let cachedBody = mcache.get(key);
         if (!cachedBody) {
             client.rates({short: 1, accepted: 1}, function (err, res) {
+                if(err) {
+                    console.err("Error From CP: " + err);
+                    res.json({"amt": "0", "msg": "backend failure"});
+                    return;
+                }
                 mcache.put(key, res, 300 * 1000);
                 let total = calculate_value(cachedBody, req.body);
                 res.json({"amt": total});
