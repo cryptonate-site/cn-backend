@@ -49,7 +49,7 @@ app.use("/ipn",
         merchantSecret: global.config.coinpayments.merchSecret,
         rawBodyIndex: "rawBody"
     }), function (req, res, next) {
-        res.status(500);
+        res.status(200);
         res.end();
     }]);
 // catch 404 and forward to error handler
