@@ -38,7 +38,7 @@ router.post("/calculate_value", function (req, res) {
                     return;
                 }
                 mcache.put(key, res, 300 * 1000);
-                let total = calculate_value(cachedBody, req.body);
+                let total = calculate_value(res, req.body);
                 res.json({"amt": total});
             });
         } else {
