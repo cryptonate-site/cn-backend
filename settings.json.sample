@@ -11,5 +11,10 @@
     "secret": "",
     "merchId": "",
     "merchSecret": ""
+  },
+  "redis": {
+    "url": "",
+    "cache_db": 1,
+    "socket_db": 2
   }
 }
