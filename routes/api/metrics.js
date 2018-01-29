@@ -37,7 +37,7 @@ router.post("/calculate_value", function (req, res) {
                     res.json({"amt": "0", "msg": "backend failure"});
                     return;
                 }
-                mcache.put(key, res, 300 * 1000);
+                mcache.put(key, cpres, 300 * 1000);
                 let total = calculate_value(cpres, req.body);
                 res.json({"amt": total});
             });
