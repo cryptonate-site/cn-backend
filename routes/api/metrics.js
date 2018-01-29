@@ -28,7 +28,7 @@ const calculate_value = (res, currencies) => {
 
 router.post("/calculate_value", function (req, res) {
     let key = "__metrics__valuecache";
-    if(res.body) {
+    if(req.body) {
         let cachedBody = mcache.get(key);
         if (!cachedBody) {
             client.rates({short: 1, accepted: 1}, function (err, res) {
