@@ -1,13 +1,20 @@
 doctype html
 html
-  head
-    title= Cryptonate
-  body
-    h1#whodonated
-    h2#howmuch
-    h3#message
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js")
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js")
-    script.
-      var listenTo = "#{alertboxKey}";
-    script(src="/js/alertbox-control.js")
+    head
+        title= Cryptonate
+        link(rel="stylesheet",href="/css/alertbox.css")
+    body
+        div#donation-field
+            div#image
+                img#the-image(src="https://www.ethereum.org/images/logos/ETHEREUM-ICON_Black_small.png")
+            p.center
+                span#name
+                span#hasDonated
+            p#message
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js")
+        script.
+            var listenTo = "#{alertboxKey}";
+        script(src="/js/alertbox-control.js")
+
+            //todo finish everything else with donatebox
