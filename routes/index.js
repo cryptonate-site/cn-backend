@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const SocketManager = require('/lib/socket-manager');
+const SocketManager = require('../lib/socket-manager');
 
 router.post('/api/alertbox/execute-test', function(req, res, next) {
     if(req.body && req.body.alertboxKey && req.body.user_id) {
