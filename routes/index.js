@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const SocketManager = require('../lib/socket-manager');
 
-router.post('/api/alertbox/execute-test', function(req, res, next) {
+router.post('/api/alertbox/execute-test', function(req, res) {
     if(req.body && req.body.alertboxKey && req.body.user_id) {
         global.database.pool.query("SELECT id FROM `users` WHERE alertboxApiKey=?", [req.body.alertboxKey], function (err, data) {
             if(err) {
@@ -12,7 +12,7 @@ router.post('/api/alertbox/execute-test', function(req, res, next) {
                 return;
             }
             if (data[0].id.toString() === req.body.user_id.toString()) {
-                SocketManager.instance.socketManager.to(req.body.alertboxKey).emit({
+                SocketManager.instance.socketManager.to(req.body.alertboxKey).emit("payment", {
                     from: "Test Buyer",
                     amount: 0.00245,
                     currency: "TST",
