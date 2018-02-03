@@ -5,6 +5,12 @@ const SocketManager = require('../lib/socket-manager');
 router.post('/api/alertbox/execute-test', function(req, res, next) {
     if(req.body && req.body.alertboxKey && req.body.user_id) {
         global.database.pool.query("SELECT id FROM `users` WHERE alertboxApiKey=?", [req.body.alertboxKey], function (err, data) {
+            if(err) {
+                res.status(500);
+                res.json({"error": "db error"});
+                console.log(err);
+                return;
+            }
             if (data[0].id === req.body.user_id) {
                 SocketManager.instance.socketManager.to(req.body.alertboxKey).emit({
                     from: "Test Buyer",
