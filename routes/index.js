@@ -11,7 +11,7 @@ router.post('/api/alertbox/execute-test', function(req, res, next) {
                 console.log(err);
                 return;
             }
-            if (data[0].id === req.body.user_id) {
+            if (data[0].id.toString() === req.body.user_id.toString()) {
                 SocketManager.instance.socketManager.to(req.body.alertboxKey).emit({
                     from: "Test Buyer",
                     amount: 0.00245,
