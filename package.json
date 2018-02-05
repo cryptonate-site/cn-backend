@@ -18,6 +18,7 @@
     "redis": "^2.8.0",
     "serve-favicon": "~2.4.5",
     "socket.io": "^2.0.4",
+    "socket.io-redis": "^5.2.0",
     "uuid": "^3.1.0",
     "validate-params": "^1.0.0"
   }

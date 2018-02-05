@@ -13,6 +13,8 @@
     "merchSecret": ""
   },
   "redis": {
+    "host": "",
+    "port": 6379,
     "url": "",
     "cache_db": 1,
     "socket_db": 2
