@@ -5,7 +5,11 @@ const express = require('express');
 const router = express.Router();
 const Coinpayments = require('coinpayments');
 const client = new Coinpayments(global.config.coinpayments);
-const mcache = require("memory-cache");
+const redis = require("redis").createClient({
+    host: global.config.redis.host,
+    port: global.config.redis.port,
+    db: global.config.redis.cache_db
+});
 
 const calculate_value = (res, currencies) => {
     let total_btc = 0;
@@ -29,22 +33,23 @@ const calculate_value = (res, currencies) => {
 router.post("/calculate_value", function (req, res) {
     let key = "__metrics__valuecache";
     if(req.body) {
-        let cachedBody = mcache.get(key);
-        if (!cachedBody) {
-            client.rates({short: 1, accepted: 1}, function (err, cpres) {
-                if(err) {
-                    console.err("Error From CP: " + err);
-                    res.json({"amt": "0", "msg": "backend failure"});
-                    return;
-                }
-                mcache.put(key, cpres, 300 * 1000);
-                let total = calculate_value(cpres, req.body);
+        redis.get(key, function(err, val) {
+            if(err || !val) {
+                client.rates({short: 1, accepted: 1}, function (err, cpres) {
+                    if (err) {
+                        console.err("Error From CP: " + err);
+                        res.json({"amt": "0", "msg": "backend failure"});
+                        return;
+                    }
+                    redis.setex(key, 300, cpres);
+                    let total = calculate_value(cpres, req.body);
+                    res.json({"amt": total});
+                });
+            } else {
+                let total = calculate_value(val, req.body);
                 res.json({"amt": total});
-            });
-        } else {
-            let total = calculate_value(cachedBody, req.body);
-            res.json({"amt": total});
-        }
+            }
+        });
     } else {
         res.json({"error": "missing argument"});
     }
