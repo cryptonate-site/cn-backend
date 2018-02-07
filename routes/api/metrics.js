@@ -41,12 +41,12 @@ router.post("/calculate_value", function (req, res) {
                         res.json({"amt": "0", "msg": "backend failure"});
                         return;
                     }
-                    redis.setex(key, 300, cpres);
+                    redis.setex(key, 300, JSON.stringify(cpres));
                     let total = calculate_value(cpres, req.body);
                     res.json({"amt": total});
                 });
             } else {
-                let total = calculate_value(val, req.body);
+                let total = calculate_value(JSON.parse(val), req.body);
                 res.json({"amt": total});
             }
         });
