@@ -35,8 +35,6 @@ router.post("/calculate_value", function (req, res) {
     if(req.body) {
         redis.get(key, function(err, val) {
             if(err || !val) {
-                console.error(err);
-                console.error(val);
                 client.rates({short: 1, accepted: 1}, function (err, cpres) {
                     if (err) {
                         console.err("Error From CP: " + err);
