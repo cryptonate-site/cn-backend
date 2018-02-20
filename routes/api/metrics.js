@@ -20,10 +20,10 @@ const calculate_value = (res, currencies) => {
         }
     };
     let calc_to_fiat = () => {
-        total += total_btc / res.USD.rate_btc;
+        total += total_btc / res["to_currency"].rate_btc;
     };
 
-    currencies.forEach(function (val) {
+    currencies.currencies.forEach(function (val) {
        calc_to_btc(val.currency, val.amount);
     });
     calc_to_fiat();
