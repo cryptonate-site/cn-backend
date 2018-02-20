@@ -14,8 +14,10 @@ const redis = require("redis").createClient({
 const calculate_value = (res, currencies) => {
     let total_btc = 0;
     let total = 0;
+    console.log(res);
+    console.log(currencies);
     let calc_to_btc = (from_currency, from_amt) => {
-        if(res[from_currency]) {
+        if(res.currencies[from_currency]) {
             total_btc += res.currencies[from_currency].rate_btc * from_amt;
         }
     };
