@@ -22,7 +22,7 @@ const calculate_value = (res, currencies) => {
         }
     };
     let calc_to_fiat = () => {
-        total += total_btc / res["to_currency"].rate_btc;
+        total += total_btc / res[currencies.to_currency].rate_btc;
     };
 
     currencies.currencies.forEach(function (val) {
