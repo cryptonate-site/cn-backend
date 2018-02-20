@@ -16,7 +16,7 @@ const calculate_value = (res, currencies) => {
     let total = 0;
     let calc_to_btc = (from_currency, from_amt) => {
         if(res[from_currency]) {
-            total_btc += res[from_currency].rate_btc * from_amt;
+            total_btc += res.currencies[from_currency].rate_btc * from_amt;
         }
     };
     let calc_to_fiat = () => {
@@ -32,7 +32,7 @@ const calculate_value = (res, currencies) => {
 
 router.post("/calculate_value", function (req, res) {
     let key = "__metrics__valuecache";
-    if(req.body) {
+    if(req.body && req.body.currencies && req.body.to_currency) {
         redis.get(key, function(err, val) {
             if(err || !val) {
                 client.rates({short: 1, accepted: 1}, function (err, cpres) {
