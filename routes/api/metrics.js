@@ -17,8 +17,8 @@ const calculate_value = (res, currencies) => {
     console.log(res);
     console.log(currencies);
     let calc_to_btc = (from_currency, from_amt) => {
-        if(res.currencies[from_currency]) {
-            total_btc += res.currencies[from_currency].rate_btc * from_amt;
+        if(res[from_currency]) {
+            total_btc += res[from_currency].rate_btc * from_amt;
         }
     };
     let calc_to_fiat = () => {
