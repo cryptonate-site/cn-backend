@@ -1,0 +1,20 @@
+doctype html
+html
+    head
+        title Cryptonate Donation Box
+        link(rel="stylesheet", href="/css/alertbox.css")
+    body
+        div#donation-field(style="display: none;")
+            div.image-container
+                img#the-image
+            p.center
+                span.name#name
+                span.hasDonated#hasDonated
+            p.message#message
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js")
+        script.
+            var listenTo = "#{alertboxKey}";
+        script(src="/js/alertbox-control.js")
+
+            //todo finish everything else with donatebox

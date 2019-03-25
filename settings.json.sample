@@ -1,0 +1,22 @@
+{
+  "db": {
+    "connectionLimit" : 10,
+    "host"     : "",
+    "user"     : "",
+    "password" : "",
+    "database" : ""
+  },
+  "coinpayments": {
+    "key": "",
+    "secret": "",
+    "merchId": "",
+    "merchSecret": ""
+  },
+  "redis": {
+    "host": "",
+    "port": 6379,
+    "url": "",
+    "cache_db": 1,
+    "socket_db": 2
+  }
+}
